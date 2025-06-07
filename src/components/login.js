@@ -11,7 +11,7 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://backend-service/api/login', {
+      const response = await axios.post('http://Backend-service.ap-south-1.elasticbeanstalk.com/api/login', {
         username,
         password,
       });
