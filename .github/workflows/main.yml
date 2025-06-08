@@ -1,24 +1,27 @@
-name: Deploy Terraform
+name: Deploy to EC2 with Approval
 
 on:
-  push
+  push:
+    branches:
+      - main   # or your deployment branch
+
 permissions:
-      id-token: write
-      contents: read
+  id-token: write
+  contents: read
+  pull-requests: write
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Debug OIDC Token
         run: |
           echo "Fetching OIDC Token"
           curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL" | jq
-
 
       - name: Configure AWS credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v2
@@ -32,40 +35,38 @@ jobs:
         with:
           terraform_version: 1.1.7
 
-      - name: Test
-        run: echo "everything fine"
+      - name: Run tests
+        run: echo "Everything fine"
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: http://52.66.241.131  # optional, your EC2 URL
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy code to EC2
+        uses: appleboy/ssh-action@v0.1.9
+        with:
+          host: 52.66.241.131
+          username: ec2-user
+          key: ${{ secrets.NODEPROJECT }}
+          port: 22
+          script: |
+            if [ -d "/home/ec2-user/Frontend_React_login_signup/.git" ]; then
+              echo "Repo exists, pulling latest changes..."
+              cd /home/ec2-user/your_app_directory
+              git pull origin main
+            else
+              echo "Repo not found, cloning..."
+              git clone https://github.com/paras-31/Frontend_React_login_signup.git
+              cd /home/ec2-user/Frontend_React_login_signup
+            fi
+            npm install
+            pm2 restart all
 
 
-      # - name: Terraform Plan
-      #   run: terraform plan
-
-      # - name: Terraform Apply
-      #   run: terraform apply -auto-approve
-
-# name: AWS OIDC Connect Demo GA
-# on:
-#   push
-# env:
-#   AWS_REGION : "eu-west-2"   
-# permissions:
-#       id-token: write
-#       contents: read
-# jobs:
-#   DemoOIDC:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Git clone the repository
-#         uses: actions/checkout@v3
-
-#       - name: configure aws credentials
-#         uses: aws-actions/configure-aws-credentials@v1
-#         with:
-#           role-to-assume: "arn:aws:iam::609009160573:role/GithubopenIDC"
-          
-#           aws-region: "us-east-1"
-
-#       - name: Print AWS SSM Parameter
-#         run: aws ssm get-parameter --name=hello_aws-gh-oidc --query Parameter.Value
-
-#       - name: Print assumed role
-#         run: aws sts get-caller-identity
