@@ -9,7 +9,8 @@ const SignupPage = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://Backend-service.ap-south-1.elasticbeanstalk.com/api/signup', {
+      // const response = await axios.post('http://Backend-service.ap-south-1.elasticbeanstalk.com/api/signup', {
+      const response = await axios.post('/api/signup', {
         username,
         password,
       });
