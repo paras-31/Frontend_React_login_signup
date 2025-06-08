@@ -23,23 +23,23 @@ jobs:
       - name: Configure AWS credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::609009160573:role/GithubopenIDC
+          role-to-assume: arn:aws:iam::783764585732:role/connectionwithgithubforpipeline
           role-session-name: "samplerolesession"
-          aws-region: us-east-1
+          aws-region: ap-south-1
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.1.7
 
-      - name: Terraform Init
-        run: terraform init
+      - name: Test
+          echo "everything fine"
 
-      - name: Terraform Plan
-        run: terraform plan
+      # - name: Terraform Plan
+      #   run: terraform plan
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
+      # - name: Terraform Apply
+      #   run: terraform apply -auto-approve
 
 # name: AWS OIDC Connect Demo GA
 # on:
