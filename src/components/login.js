@@ -12,7 +12,7 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       // const response = await axios.post('http://Backend-service.ap-south-1.elasticbeanstalk.com/api/login', {
-      const response = await axios.post('http://52.66.241.131:5000/api/login', {
+      const response = await axios.post('http://52.66.241.131/api/login', {
         username,
         password,
       });
