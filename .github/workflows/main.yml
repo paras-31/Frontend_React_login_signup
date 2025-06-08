@@ -67,6 +67,6 @@ jobs:
               cd /home/ec2-user/Frontend_React_login_signup
             fi
             npm install
-            pm2 restart all
+            npm run build
 
 
