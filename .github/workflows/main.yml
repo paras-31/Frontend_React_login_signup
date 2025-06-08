@@ -56,17 +56,19 @@ jobs:
           username: ec2-user
           key: ${{ secrets.NODEPROJECT }}
           port: 22
-          script: |
-            if [ -d "/home/ec2-user/Frontend_React_login_signup/.git" ]; then
-              echo "Repo exists, pulling latest changes..."
-              cd /home/ec2-user/your_app_directory
-              git pull origin main
-            else
-              echo "Repo not found, cloning..."
-              git clone https://github.com/paras-31/Frontend_React_login_signup.git
-              cd /home/ec2-user/Frontend_React_login_signup
-            fi
-            npm install
-            npm run build
+        script: |
+          if [ -d "/home/ec2-user/Frontend_React_login_signup/.git" ]; then
+            echo "Repo exists, pulling latest changes..."
+            cd /home/ec2-user/Frontend_React_login_signup
+            git pull origin main
+          else
+            echo "Repo not found, cloning..."
+            git clone https://github.com/paras-31/Frontend_React_login_signup.git /home/ec2-user/Frontend_React_login_signup
+            cd /home/ec2-user/Frontend_React_login_signup
+          fi
+
+          npm install
+          npm run build
+          pm2 restart all
 
 
