@@ -66,7 +66,6 @@ jobs:
               git clone https://github.com/paras-31/Frontend_React_login_signup.git /home/ec2-user/Frontend_React_login_signup
               cd /home/ec2-user/Frontend_React_login_signup
             fi
-
             npm install
             npm run build
             pm2 restart all
